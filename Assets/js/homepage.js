@@ -1,21 +1,21 @@
-var userFormEl = document.querySelector('#user-form');
+var weatherFormEl = document.querySelector('#weather-form');
 var languageButtonsEl = document.querySelector('#language-buttons');
-var nameInputEl = document.querySelector('#username');
-var repoContainerEl = document.querySelector('#repos-container');
+var nameInputEl = document.querySelector('#cityname');
+var repoContainerEl = document.querySelector('#weatherparams-container');
 var repoSearchTerm = document.querySelector('#repo-search-term');
 
 var formSubmitHandler = function (event) {
   event.preventDefault();
 
-  var username = nameInputEl.value.trim();
+  var cityname = nameInputEl.value.trim();
 
-  if (username) {
-    getUserRepos(username);
+  if (cityname) {
+    getCityWeather(cityname);
 
     repoContainerEl.textContent = '';
     nameInputEl.value = '';
   } else {
-    alert('Please enter a GitHub username');
+    alert('Please enter a city');
   }
 };
 
@@ -29,50 +29,73 @@ var buttonClickHandler = function (event) {
   }
 };
 
-var getUserRepos = function (user) {
-  var apiUrl = 'https://api.github.com/users/' + user + '/repos';
+var getCityWeather = function (city) {
+ let myKey = '3647b99d321bbf401a1d1e6e104ff888';
+    //https://api.openweathermap.org/data/2.5/forecast5?q=Sydney&appid=3647b99d321bbf401a1d1e6e104ff888
+  var apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&only_current=true&exclude=hourly&appid=${myKey}&cnt=5`;
 
   fetch(apiUrl)
     .then(function (response) {
       if (response.ok) {
         console.log(response);
-        response.json().then(function (data) {
-          console.log(data);
-          displayRepos(data, user);
-        });
-      } else {
+    } else {
         alert('Error: ' + response.statusText);
       }
+        return response.json();
     })
+        .then(function (data) {
+          console.log("aquiiii");  
+          console.log(data);
+          displayWeather(data, city);
+        })
+    //   } else {
+    //     alert('Error: ' + response.statusText);
+    //   }
+    //})
     .catch(function (error) {
-      alert('Unable to connect to GitHub');
+      alert('Unable to connect'+error);
     });
 };
 
-var getFeaturedRepos = function (language) {
-  var apiUrl = 'https://api.github.com/search/repositories?q=' + language + '+is:featured&sort=help-wanted-issues';
+// var getFeaturedRepos = function (language) {
+//   var apiUrl = 'https://api.github.com/search/repositories?q=' + language + '+is:featured&sort=help-wanted-issues';
 
-  fetch(apiUrl).then(function (response) {
-    if (response.ok) {
-      response.json().then(function (data) {
-        displayRepos(data.items, language);
-      });
-    } else {
-      alert('Error: ' + response.statusText);
-    }
-  });
-};
+//   fetch(apiUrl).then(function (response) {
+//     if (response.ok) {
+//       response.json().then(function (data) {
+//         displayRepos(data.items, language);
+//       });
+//     } else {
+//       alert('Error: ' + response.statusText);
+//     }
+//   });
+// };
 
-var displayRepos = function (repos, searchTerm) {
-  if (repos.length === 0) {
-    repoContainerEl.textContent = 'No repositories found.';
-    return;
-  }
+var displayWeather = function (weatherParams, searchTerm) {
+    console.log('APPPPP');
+//   if (weatherParams.list.length === 0) {
+//     repoContainerEl.textContent = 'No data found.';
+//     return;
+//   }
 
   repoSearchTerm.textContent = searchTerm;
 
-  for (var i = 0; i < repos.length; i++) {
-    var repoName = repos[i].owner.login + '/' + repos[i].name;
+
+  repoContainerEl.innerHTML = weatherParams.list.map(day => {
+      //get the date from the dt timestamp
+      let dt = day.dt * 1000;
+      return `<section class="weather-card">
+      <header>${dt}</header>
+    <img src="http://openweathermap.org/img/wn/${day.weather[0].icon}@4x.png" alt="${day.weather[0].description}" />
+       <p>Price: $300</p>
+    </section>`;
+  }).join(" ");
+
+
+  for (var i = 0; i < weatherParams.length; i++) {
+      console.log("ACAA");
+      console.log("LOOP "+weatherParams[i].weather[0].icon + '/' + weatherParams[i].wind.speed);
+    var repoName = weatherParams[i].weather[0].icon + '/' + weatherParams[i].wind.speed;
 
     var repoEl = document.createElement('a');
     repoEl.classList = 'list-item flex-row justify-space-between align-center';
@@ -86,9 +109,9 @@ var displayRepos = function (repos, searchTerm) {
     var statusEl = document.createElement('span');
     statusEl.classList = 'flex-row align-center';
 
-    if (repos[i].open_issues_count > 0) {
+    if (weatherParams[i].open_issues_count > 0) {
       statusEl.innerHTML =
-        "<i class='fas fa-times status-icon icon-danger'></i>" + repos[i].open_issues_count + ' issue(s)';
+        "<i class='fas fa-times status-icon icon-danger'></i>" + weatherParams[i].open_issues_count + ' issue(s)';
     } else {
       statusEl.innerHTML = "<i class='fas fa-check-square status-icon icon-success'></i>";
     }
@@ -99,5 +122,5 @@ var displayRepos = function (repos, searchTerm) {
   }
 };
 
-userFormEl.addEventListener('submit', formSubmitHandler);
+weatherFormEl.addEventListener('submit', formSubmitHandler);
 languageButtonsEl.addEventListener('click', buttonClickHandler);
