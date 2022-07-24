@@ -1,10 +1,11 @@
 var weatherFormEl = document.querySelector('#weather-form');
-var languageButtonsEl = document.querySelector('#language-buttons');
+var weatherCityButtonsEl = document.querySelector('#weatherCity-buttons');
 var nameInputEl = document.querySelector('#cityname');
 var repoContainerEl = document.querySelector('#weatherparams-container');
 var repoSearchTerm = document.querySelector('#repo-search-term');
 var todayWeather = document.createElement('div');
 const myKey = '3647b99d321bbf401a1d1e6e104ff888';
+var weather = []; //array for local storage
 
 var formSubmitHandler = function (event) {
   event.preventDefault();
@@ -69,7 +70,20 @@ var getDailyWeather = function (weatherResults) {
 };
 
 var displayWeather = function (weatherParams, searchTerm) {
-    repoSearchTerm.textContent = searchTerm;
+    repoSearchTerm.textContent = searchTerm.toLowerCase();
+
+    localStorage.setItem("weather", JSON.stringify(weather));
+    // Add new city to weather array
+    //check if the city is already in the array if so dont add it again
+    //note adding in lowercase to made easy tosearch later
+    if((weather.length >= 0) || (! weather.indexOf(searchTerm.toLowerCase()))){
+      weather.push(searchTerm.toLowerCase());
+    }
+    
+    // Store updated todos in localStorage, re-render the list
+    storedWeather();
+    renderWeather();
+    
     // in roder to display five day forecast may have to reduce three out of eight days
     for (var i = 0; i < weatherParams.daily.length-2; i++) {
         // Parse the Unix timestamp and convert into any date format.
@@ -119,5 +133,60 @@ var displayWeather = function (weatherParams, searchTerm) {
   }
 };
 
+// This function is being called below and will run when the page loads.
+function init() {
+   // Get stored weather from localStorage
+    var storedWeather = JSON.parse(localStorage.getItem("weather"));
+  
+    // If weather were retrieved from localStorage, update the weather array to it
+    if (storedWeather !== null) {
+      weather = storedWeather;
+    }
+    // This is a helper function that will render weather to the DOM
+  renderWeather();
+}
+  
+// The following function renders items in a WeatherCity list as <li> elements
+function renderWeather() {
+    // Clear todoList element and update todoCountSpan
+    weatherCityButtonsEl.innerHTML = "";
+    //todoCountSpan.textContent = weather.length;
+    
+    // Render a new button for each weather
+    for (var i = 0; i < weather.length; i++) {
+      var WeatherCity = weather[i];
+      var weatherCityButton = document.createElement("button");
+      weatherCityButton.textContent = WeatherCity;
+      weatherCityButton.setAttribute("data-index", i);
+      weatherCityButton.setAttribute("id", weather[i]);
+      //weatherCityButton.appendChild(button);
+      weatherCityButtonsEl.appendChild(weatherCityButton);
+    }
+  }
+
+function storedWeather() {
+    // Stringify and set key in localStorage to weather array
+    localStorage.setItem("weather", JSON.stringify(weather));
+}
+
 weatherFormEl.addEventListener('submit', formSubmitHandler);
-languageButtonsEl.addEventListener('click', buttonClickHandler);
+weatherCityButtonsEl.addEventListener('click', buttonClickHandler);
+
+// Add click event to weather button element
+weatherCityButtonsEl.addEventListener("click", function(event) {
+    var element = event.target;
+    // Checks if element is a button
+    if (element.matches("button") === true) {
+      // Get its data-index value and remove the todo element from the list
+      var index = element.parentElement.getAttribute("data-index");
+      //call the function get city weather with the city name  to get the data again.
+      getCityWeather(element.id);
+
+      // Store updated todos in localStorage, re-render the list
+      storedWeather();
+      renderWeather();
+    }
+});
+
+// Calls init to retrieve data and render it to the page on load
+init()
