@@ -205,6 +205,28 @@
     width: 100%;
   }
 
+  .today-weather {
+    flex: auto;
+    margin: 0 0 20px 0;
+    border: 3px solid var(--dark);
+    border-radius: var(--border-radius);
+    background: #200ae4;
+  }
+
+  /* uvi spam */
+  .uvi-low{
+    border-radius: 2px;
+    background-color: green;
+  }
+  .uvi-moderate{
+      border-radius: 2px;
+      background-color: orange;
+  }
+  .uvi-high{
+      border-radius: 2px;
+      background-color: red;
+  }
+
 
   /* FORM */
   .form-label,
