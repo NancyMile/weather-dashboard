@@ -58,9 +58,8 @@ var getDailyWeather = function (weatherResults) {
     fetch(apiUrlDaily).then(function (response) {
         if (response.ok){
             response.json().then(function (data) {
-            console.log("new response DAILY");
             console.log(data);
-            displayWeather(data);
+            displayWeather(data,weatherResults.city.name);
         });
         } else {
             alert('Error: ' + response.statusText);

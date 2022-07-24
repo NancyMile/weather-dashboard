@@ -3,9 +3,9 @@
     --secondary: #9caea9;
     --tertiary: #788585;
     --light-dark: #6f6866;
-    /* --dark: #38302e; */
-    --dark: rgb(33, 59, 129);
+    --dark: #200ae4;
     --border-radius: .3rem;
+    --skyblue: skyblue;
   }
   
   * {
@@ -169,7 +169,7 @@
 
 .weatherparams-container {
     flex: 4;
-    background-color: #fff;
+    background-color: var(--primary);
     padding: 50px;
     display: flex;
     flex-wrap: wrap;
@@ -188,6 +188,7 @@
     transform: rotate(8deg);
     box-shadow: 10px 10px 5px #aaaaaa;
     margin: 20px;
+    background: var(--skyblue);
   }
   
   /* Added border-radius to match the card */
