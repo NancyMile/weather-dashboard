@@ -84,7 +84,7 @@ var displayWeather = function (weatherParams, searchTerm) {
             <img src="http://openweathermap.org/img/wn/${weatherParams.daily[i].weather[0].icon}@4x.png" alt="${weatherParams.daily[i].weather[0].description}" />
             <p>Temp: ${weatherParams.daily[i].temp.day} F</p>
             <p>Wind: ${weatherParams.daily[i].wind_speed} MPH</p>
-            <p>Humidity: ${weatherParams.daily[i].humdity}%</p>`;
+            <p>Humidity: ${weatherParams.daily[i].humidity}%</p>`;
 
             // 
             // Low exposure (green): 1-2
