@@ -87,7 +87,10 @@ var displayWeather = function (weatherParams, searchTerm) {
       return `<section class="weather-card">
       <header>${dt}</header>
     <img src="http://openweathermap.org/img/wn/${day.weather[0].icon}@4x.png" alt="${day.weather[0].description}" />
-       <p>Price: $300</p>
+       <p>Temp: ${day.main.temp}</p>
+       <p>Wind: ${day.wind.speed}</p>
+       <p>Humidity: ${day.main.humdity}</p>
+       <p>UV Index: ??</p>
     </section>`;
   }).join(" ");
 
