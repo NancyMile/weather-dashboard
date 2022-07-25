@@ -185,7 +185,7 @@
     border-radius: 50px;
     padding: 10px;
     flex: 0 0 300px;
-    transform: rotate(8deg);
+    transform: rotate(4deg);
     box-shadow: 10px 10px 5px #aaaaaa;
     margin: 20px;
     background: var(--skyblue);
@@ -194,7 +194,7 @@
   /* Added border-radius to match the card */
   .weather-card header {
     border-radius: 50px 50px 0px 0px;
-    padding: 20px;
+    padding: 7px;
   }
   
   .weather-card p {
@@ -206,11 +206,11 @@
   }
 
   .today-weather {
-    flex: auto;
+    padding-left: 50px;
     margin: 0 0 20px 0;
     border: 3px solid var(--dark);
     border-radius: var(--border-radius);
-    background: #200ae4;
+    background: red;
   }
 
   /* uvi spam */
@@ -276,9 +276,9 @@
     flex-wrap: wrap;
   }
   
-  .justify-space-between {
+  /* .justify-space-between {
     justify-content: space-between;
-  }
+  } */
   
   .justify-space-around {
     justify-content: space-around;

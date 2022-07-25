@@ -3,6 +3,7 @@ var weatherCityButtonsEl = document.querySelector('#weatherCity-buttons');
 var nameInputEl = document.querySelector('#cityname');
 var repoContainerEl = document.querySelector('#weatherparams-container');
 var repoSearchTerm = document.querySelector('#repo-search-term');
+var mainday = document.querySelector('#today-weather');
 var todayWeather = document.createElement('div');
 const myKey = '3647b99d321bbf401a1d1e6e104ff888';
 var weather = []; //array for local storage
@@ -14,7 +15,7 @@ var formSubmitHandler = function (event) {
 
   if (cityname) {
     getCityWeather(cityname);
-
+    document.getElementById("today-weather").innerHTML = "";
     repoContainerEl.textContent = '';
     nameInputEl.value = '';
   } else {
@@ -61,6 +62,10 @@ var getDailyWeather = function (weatherResults) {
         if (response.ok){
             response.json().then(function (data) {
             console.log(data);
+            //clear before display again
+            document.getElementById("weatherparams-container").innerHTML = "";
+            document.getElementById("today-weather").innerHTML = "";
+  
             displayWeather(data,weatherResults.city.name);
         });
         } else {
@@ -86,6 +91,9 @@ var displayWeather = function (weatherParams, searchTerm) {
     
     // in roder to display five day forecast may have to reduce three out of eight days
     for (var i = 0; i < weatherParams.daily.length-2; i++) {
+
+      
+
         // Parse the Unix timestamp and convert into any date format.
         var weatherDate = moment.unix(weatherParams.daily[i].dt).format("MM/DD/YYYY");
         var uvi = weatherParams.daily[i].uvi;
@@ -93,7 +101,7 @@ var displayWeather = function (weatherParams, searchTerm) {
         var weatherCard = document.createElement('section');
         weatherCard.classList = "flex-row weather-card";
         weatherCard.innerHTML = weatherCard.innerHTML +
-        `<section class="weather-card">
+        `<section class="weather-card" id="day${i}">
             <header>${weatherDate}</header>
             <img src="http://openweathermap.org/img/wn/${weatherParams.daily[i].weather[0].icon}@4x.png" alt="${weatherParams.daily[i].weather[0].description}" />
             <p>Temp: ${weatherParams.daily[i].temp.day} F</p>
@@ -121,14 +129,16 @@ var displayWeather = function (weatherParams, searchTerm) {
                 </section>`;
             }
         
-        if(i==0){
-            //append today weather to the repcontainer
-            todayWeather.classList = "flex-row today-weather";
-            repoContainerEl.appendChild(todayWeather);
-            todayWeather.appendChild(weatherCard);
-        }else{
+         //if(i==0){
+        //   document.getElementById("today-weather").innerHTML = "";
+        //     //append today weather to the repcontainer
+        //     todayWeather.classList = "today-weather";
+        //     //todayWeather.setAttribute("id","weather-per-day");
+        ////     repoContainerEl.appendChild(todayWeather);
+        //mainday.appendChild('#day0');
+         //}else{
             repoContainerEl.appendChild(weatherCard);
-        }
+       // }
     
   }
 };
@@ -159,6 +169,7 @@ function renderWeather() {
       weatherCityButton.textContent = WeatherCity;
       weatherCityButton.setAttribute("data-index", i);
       weatherCityButton.setAttribute("id", weather[i]);
+      weatherCityButton.setAttribute("class", "btn");
       //weatherCityButton.appendChild(button);
       weatherCityButtonsEl.appendChild(weatherCityButton);
     }
@@ -190,3 +201,6 @@ weatherCityButtonsEl.addEventListener("click", function(event) {
 
 // Calls init to retrieve data and render it to the page on load
 init()
+
+//locations searching by lat and lon
+////https://api.teleport.org/api/locations/-33.8679,151.2073 
